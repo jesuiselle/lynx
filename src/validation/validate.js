@@ -11,8 +11,6 @@ const validate = (fields) => {
         }
 
         if (currentField.required && currentField.checked === false) {
-            console.log(currentField.checked);
-            console.log(currentField);
             errors[field] = 'Check me to made my day!';
         }
 

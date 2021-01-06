@@ -2,11 +2,13 @@ import React, {useState} from 'react';
 import Step from './Step';
 import Preview from './Preview';
 import validate from '../validation/validate';
+import {baseURL} from '../shared/baseURL';
 
 const Form = () => {
     const [step, setStep] = useState(1);
     const [errors, setErrors] = useState({});
-    const [checked, setChecked] = useState()
+    const [checked, setChecked] = useState();
+    const [memes, setMemes] = useState([]);
 
     const [formData, setFormData] = useState({
         stepOne: {
@@ -53,6 +55,29 @@ const Form = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
+        const meme = formData.stepTwo.message.value;
+        fetch(baseURL, {
+            "method": "POST",
+            "headers": {
+                "content-type": "application/json",
+                "accept": "application/json"
+            },
+            "body": JSON.stringify({
+                meme
+            })
+        })
+            .then(response => response.json())
+            .then(() => {
+                setMemes([meme, ...memes]);
+                formData.stepOne.firstStep.checked = false;
+                alert("Your interest, I thank you for 🥰");
+                setStep(step - 2);
+                formData.stepTwo.message.value = '';
+                formData.stepTwo.message.placeholder = 'Send Me Meme(s)...👀';
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     return (
